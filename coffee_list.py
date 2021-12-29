@@ -25,12 +25,14 @@ MENU = {
 }
 
 resources = {
-    "water": 300,
-    "milk": 200,
-    "coffee": 100,
+    "water": 1500,
+    "milk": 1500,
+    "coffee": 1500,
+}
+
+deposits = {
     "quaters": 0,
     "dimes": 0,
     "nickles": 0,
     "pennies": 0,
 }
-
