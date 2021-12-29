@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "Mock Coffee Machine"
+version = "0.0.1"
+description = "Backend coffee Machine Logic"
+authors = ["Joseph Yoo <joseph@jyoo.co>"]
+license = "NA"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
