@@ -24,9 +24,60 @@ def system_boot():
 
 def logo():
     print('''
-    
-    '''
-    )
+        /~~~~~~~~~~~~~~~~~~~/|
+       /              /######/ / |
+      /              /______/ /  |
+     ========================= /||
+     |_______________________|/ ||
+      |  \****/     \__,,__/    ||
+      |===\**/       __,,__     ||    
+      |______________\====/%____||
+      |   ___        /~~~~\ %  / |
+     _|  |===|===   /      \%_/  |
+    | |  |###|     |########| | /
+    |____\###/______\######/__|/
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ██       ██████   █████  ██████  ██ ███    ██  ██████           
+    ██      ██    ██ ██   ██ ██   ██ ██ ████   ██ ██                
+    ██      ██    ██ ███████ ██   ██ ██ ██ ██  ██ ██   ███          
+    ██      ██    ██ ██   ██ ██   ██ ██ ██  ██ ██ ██    ██          
+    ███████  ██████  ██   ██ ██████  ██ ██   ████  ██████  ██ ██ ██                                                               
+    ''')
+
+def print_menu():
+    print('''
+    ┌─┐┌─┐┌─┐┬─┐┌─┐┌─┐┌─┐┌─┐    
+    ├┤ └─┐├─┘├┬┘├┤ └─┐└─┐│ │    
+    └─┘└─┘┴  ┴└─└─┘└─┘└─┘└─┘    
+    ┬  ┌─┐┌┬┐┌┬┐┌─┐             
+    │  ├─┤ │  │ ├┤              
+    ┴─┘┴ ┴ ┴  ┴ └─┘             
+    ┌─┐┌─┐┌─┐┌─┐┬ ┬┌─┐┌─┐┬┌┐┌┌─┐
+    │  ├─┤├─┘├─┘│ ││  │  │││││ │
+    └─┘┴ ┴┴  ┴  └─┘└─┘└─┘┴┘└┘└─┘
+    ''')
+
+def run_coffee(coffee_type):
+        display_total(coffee_type)
+        coin_collected = {
+            "quaters": 0,
+            "dimes": 0,
+            "nickles": 0,
+            "pennies": 0,        
+        }
+        # below method is a bit annoying, maybe implent a better UI when entering coins. 
+        print('**This machine takes $0.25, $0.10, $0.05, $0.01 ONLY**')
+        coin_collected["quaters"] = int(input('How many quaters would you like to insert?: '))
+        coin_collected["dimes"] = int(input('How many dimes would you like to insert?: '))
+        coin_collected["nickles"] = int(input('How many nickles would you like to insert?: '))
+        coin_collected["pennies"]= int(input('How many pennies would you like to insert?: '))
+        print('')
+        customer_total = round(customer_total_calc(coin_collected["dimes"], coin_collected["nickles"], coin_collected["pennies"], coin_collected["quaters"]), 2)
+
+        make_coffee(coffee_type, customer_total, coin_collected)       
+
+        time.sleep(3.5)
+        os.system('clear')
 
 def resource_check(coffee_type):
     '''Check if there are enough resources available to run coffee_choice()'''
@@ -73,7 +124,7 @@ def report():
     Pennies: {deposits['pennies']}
     Total amount: ${round(gross_revenue, 2)}
     ''')
-
+      
 def maint():
     '''Initialize maintenance mode, turns off console.'''
     print('Maintenance mode initialized.')
@@ -86,7 +137,7 @@ def maint():
 
 def check_total(coffee_type, coins):
     '''Check accepted coins and return True or False for this function to run under coffee_choice() to run'''
-    if coffee_type == 'espresso':
+    if coffee_type == 'espresso': 
         if coins >= MENU['espresso']['cost']:
             return True
         elif coins <= MENU['espresso']['cost']:
@@ -105,29 +156,25 @@ def check_total(coffee_type, coins):
 def display_total(coffee_type):
     '''Display total due with full statement "total due:....."'''
     if coffee_type == 'espresso':
-        print(f"Total due: {MENU['espresso']['cost']}")
+        print(f"Total due: {MENU['espresso']['cost']}0")
     elif coffee_type == 'latte':
-        print(f"Total due: {MENU['latte']['cost']}")
+        print(f"Total due: {MENU['latte']['cost']}0")
     elif coffee_type == 'cappuccino':
-        print(f"Total due: {MENU['cappuccino']['cost']}")
+        print(f"Total due: {MENU['cappuccino']['cost']}0")
 
 def update_resources(coffee_type, coin_collected):
     # update quaters to deposits
     #BUG DOES NOT UPDATE coffee_list.py, need to pickle or json, data stored until reset.
     deposits["quaters"] += coin_collected["quaters"]
-    print(deposits['quaters'])
     # update dimes to deposits
     #BUG DOES NOT UPDATE coffee_list.py, need to pickle or json, data stored until reset.
     deposits["dimes"] += coin_collected["dimes"]
-    print(deposits['dimes'])
     # update nickles to deposits
     #BUG DOES NOT UPDATE coffee_list.py, need to pickle or json, data stored until reset.
     deposits["nickles"] += coin_collected["nickles"]
-    print(deposits['nickles'])
     # update pennies to deposits
     #BUG DOES NOT UPDATE coffee_list.py, need to pickle or json, data stored until reset.
     deposits["pennies"] += coin_collected["pennies"]
-    print(deposits['pennies'])
     #subtract each required resources from resource dictionary
     #BUG DOES NOT UPDATE coffee_list.py, need to pickle or json, data stored until reset.
     if coffee_type == "espresso":
@@ -145,7 +192,7 @@ def update_resources(coffee_type, coin_collected):
 def provide_change(coffee_type, collected_amount):
     '''Calculates the change needed to provide and subtracts available coins to provide change to user'''
     total_change = collected_amount - MENU[coffee_type]['cost']
-    # goes through coins and provide change based on what's avaiable. 
+    # goes through coins and provide change based on what's available. 
     c = (total_change * 10) * 10
     quaters = c // 25
     deposits["quaters"] -= quaters #1 become 0
@@ -164,8 +211,8 @@ def provide_change(coffee_type, collected_amount):
                 deposits["nickles"] = 0
                 c = c % 1
                 deposits["pennies"] -= c
+    return total_change
     
-
 def make_coffee(coffee_type, collected_amount, coin_collected):
     '''Main function that checks which coffee was selected, check_resource(), check_total(), update_resources(), and provide_change() if needed.'''
     # check which coffee choice
@@ -176,18 +223,18 @@ def make_coffee(coffee_type, collected_amount, coin_collected):
             check = check_total('espresso',collected_amount)
             # check money
             if check == True:
-                print(f'Preparing your {coffee_type}, please wait....')
+                print(f'Preparing your {coffee_type}, please wait....\n')
                 update_resources(coffee_type, coin_collected)
                 # provide change
                 if collected_amount > MENU['espresso']['cost']:
-                    print(f"Your total change: ${provide_change(coffee_type, collected_amount)} will be dispensed now.")
+                    print(f"Your total change: ${round(provide_change(coffee_type, collected_amount), 3)} will be dispensed now.\n")
                 time.sleep(3)
                 print(f'Your {coffee_type} is ready. Have a nice day!')
             else:
                 balance_due = MENU[coffee_type]["cost"] - collected_amount
-                print(f'Not enough coins. You are ${balance_due} short. Money refunded.')
+                print(f'Not enough coins. You are ${balance_due} short. Money refunded.\n')
         else:
-            print('Not enough resources to make coffee, maintenance mode intialized')
+            print('Not enough resources to make coffee, maintenance mode intialized\n')
             maint()
             maint_mode = True
     elif coffee_type == 'latte':
@@ -197,18 +244,18 @@ def make_coffee(coffee_type, collected_amount, coin_collected):
             check = check_total('latte',collected_amount)
             # check money
             if check == True:
-                print(f'Preparing your {coffee_type}, please wait....')
+                print(f'Preparing your {coffee_type}, please wait....\n')
                 update_resources(coffee_type, coin_collected)
                 # provide change
                 if collected_amount > MENU['latte']['cost']:
-                    print(f"Your total change: ${provide_change(coffee_type, collected_amount)} will be dispensed now.")
+                    print(f"Your total change: ${round(provide_change(coffee_type, collected_amount), 3)} will be dispensed now.\n")
                 time.sleep(3)
-                print(f'Your {coffee_type} is ready. Have a nice day!')
+                print(f'Your {coffee_type} is ready. Have a nice day!\n')
             else:
                 balance_due = MENU[coffee_type]["cost"] - collected_amount
-                print(f'Not enough coins. You are ${balance_due} short. Money refunded.')
+                print(f'Not enough coins. You are ${balance_due} short. Money refunded.\n')
         else:
-            print('Not enough resources to make coffee, maintenance mode intialized')
+            print('Not enough resources to make coffee, maintenance mode intialized\n')
             maint()
             maint_mode = True
     elif coffee_type == 'cappuccino':
@@ -218,23 +265,27 @@ def make_coffee(coffee_type, collected_amount, coin_collected):
             check = check_total('cappuccino',collected_amount)
             # check money
             if check == True:
-                print(f'Preparing your {coffee_type}, please wait....')
+                print(f'Preparing your {coffee_type}, please wait....\n')
                 update_resources(coffee_type, coin_collected)
                 # provide change
                 if collected_amount > MENU['cappuccino']['cost']:
-                    print(f"Your total change: ${provide_change(coffee_type, collected_amount)} will be dispensed now.")
+                    print(f"Your total change: ${round(provide_change(coffee_type, collected_amount), 2)} will be dispensed now.\n")
                 time.sleep(3)
-                print(f'Your {coffee_type} is ready. Have a nice day!')
+                print(f'Your {coffee_type} is ready. Have a nice day!\n')
             else:
                 balance_due = MENU[coffee_type]["cost"] - collected_amount
-                print(f'Not enough coins. You are ${balance_due} short. Money refunded.')
+                print(f'Not enough coins. You are ${balance_due} short. Money refunded.\n')
         else:
-            print('Not enough resources to make coffee, maintenance mode intialized')
+            print('Not enough resources to make coffee, maintenance mode intialized\n')
             maint()
             maint_mode = True
     elif coffee_type == 'off':
         maint()
+        maint_mode = True
     elif coffee_type == 'report':
         print(report())
+        report_exit = input("To Exit, type 'exit'")
+        if report_exit == 'exit':
+            os.system('clear')
     else:
-        print("Invalid Selection.")
+        print("Invalid Coffee Selection, try again.\n")

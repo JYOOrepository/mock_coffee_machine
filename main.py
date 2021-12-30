@@ -1,36 +1,47 @@
-from function import make_coffee, display_total, customer_total_calc, system_boot
-import time
+from function import  display_total, customer_total_calc, system_boot, logo, print_menu, report, maint, make_coffee, run_coffee
 import os
 import pyfiglet
 
 # Flag for Maintenance mode 
 maint_mode = False
 
-## BELOW RUNS THE MACHINE
+system_boot()
 
 while not maint_mode:
-    system_boot()
-    
-    name = input("what is your name?: ")
-    print(f"{pyfiglet.figlet_format('Hello')} {pyfiglet.figlet_format(name)}\n")
+    logo()
 
+    name = input("what is your name?: ").lower()
 
-    selected_coffee = input('\nWhat would you like today? (espresso/latte/cappuccino): ').lower()
-    coin_collected = {
-        "quaters": 0,
-        "dimes": 0,
-        "nickles": 0,
-        "pennies": 0,        
-    }
-    display_total()
-    quaters_collected = input('How many quaters would you like to insert?')
-    dimes_collected = input('How many dimes would you like to insert?')
-    nickles_collected = input('How many nickles would you like to insert?')
-    pennies_collected = input('How many pennies would you like to insert?')
+    if name == 'off':
+        maint()
+        maint_mode = True
+    elif name == 'report':
+        print(report())
+        report_exit = input("To Exit, type 'exit'")
+        if report_exit == 'exit':
+            os.system('clear')
+    else:
+        os.system('clear')
 
-    customer_total = customer_total_calc(coin_collected["dimes"], coin_collected["nickles"], coin_collected["pennies"], coin_collected["quaters"])
+        print(f"{pyfiglet.figlet_format('Hello')} {pyfiglet.figlet_format(name)}\n")
+        print_menu()
 
-    make_coffee(selected_coffee, customer_total, coin_collected)       
-
-    time.sleep(2)
-    os.system('clear')
+        selected_coffee = input('\nWhat would you like today? (Choose from selection above): ').lower()
+        
+        if selected_coffee == 'off':
+            maint()
+        elif selected_coffee == 'report':
+            print(report())
+            report_exit = input("To Exit, type 'exit'")
+            if report_exit == 'exit':
+                os.system('clear')
+        elif selected_coffee == 'espresso':
+            run_coffee(selected_coffee)
+        elif selected_coffee == 'latte':
+            run_coffee(selected_coffee)
+        elif selected_coffee == 'cappuccino':
+            run_coffee(selected_coffee)
+        else:
+            print('Incorrect Selection. Please select from the three options above.')
+            selected_coffee = input('\nWhat would you like today? (Choose from selection above): ').lower()
+            run_coffee(selected_coffee)
